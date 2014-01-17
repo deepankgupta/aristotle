@@ -9,13 +9,14 @@
   "dependencies": {
     "optimist": "0.6.0",
     "lodash": "2.4.1",
-    "aristotle-fetcher": "git+ssh://git@gitli.corp.linkedin.com:moblight/aristotle-fetcher.git#2d28efe"
+    "aristotle-fetcher": "git+ssh://git@gitli.corp.linkedin.com:moblight/aristotle-fetcher.git#2d28efe",
+    "q": "~1.0.0"
   },
   "repository": "",
   "author": "Deepank Gupta, Ethan Goldblum",
   "license": "unlicense",
   "preferGlobal": "true",
   "bin": {
-    "aristotle" : "index.js"
+    "aristotle": "index.js"
   }
 }
