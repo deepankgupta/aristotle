@@ -1,47 +1,16 @@
 #!/usr/bin/env node
-
 const argv = require('optimist').argv;
 const _ = require('lodash');
-const traverse = require('traverse');
 const util = require('util')
+const primitives = require('./lib/primitives');
 var config;
 
-
-
-function isPrimitive(type) {
-  return _.has(JAVASCRIPT_TO_AVRO_TYPE, type);
-}
-
-// TODO: Convert string to bytes, enum or fixed as well.
-var JAVASCRIPT_TO_AVRO_TYPE = {
-  'null': 'null',
-  'boolean': 'boolean',
-  'number': getNumberAvroType,
-  'string': getStringAvroType,
-}
-
-function getNumberAvroType(datum, key) {
-  if (datum % 1 === 0) {
-    return 'int';
-  } else {
-    return 'float';
-  }
-}
-
-function getStringAvroType(datum, key) {
-  var enumWhitelistedProperties = traverse.get(config, ['enums', 'whitelistedProperties']);
-  if (enumWhitelistedProperties && _.contains(enumWhitelistedProperties, key)) {
-    return 'enum';
-  } else {
-    return 'string';
-  }
-}
 
 function generateSchema(datum, key) {
   console.log('generateSchema: ', datum, key);
   var type = typeof datum;
-  if (isPrimitive(type)) {
-    var avroType = JAVASCRIPT_TO_AVRO_TYPE[type]
+  if (primitives.isPrimitive(type)) {
+    var avroType = primitives.JAVASCRIPT_TO_AVRO_TYPE[type]
     if (_.isFunction(avroType)) {
       avroType = avroType(datum, key);
     }
@@ -87,6 +56,7 @@ function main() {
     console.log('Could not require ', config.fetcher);
     return -1;
   }
+  primitives.configure(config);
   var dataPromise = fetcher.fetch();
   dataPromise.then(generate).fail(console.log);
 }
