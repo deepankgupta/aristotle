@@ -5,7 +5,6 @@ const util = require('util')
 const primitives = require('./lib/primitives');
 var config;
 
-
 function generateSchema(datum, key) {
   console.log('generateSchema: ', datum, key);
   var type = typeof datum;
@@ -16,10 +15,13 @@ function generateSchema(datum, key) {
     }
     return {
       name: key,
-      type: avroType,      
+      type: avroType,
       doc: ''
     };
   } else {
+    if (Array.isArray(datum)) {
+      return generateArraySchema(datum, key);
+    }
     // TODO: Handle complex types
     return _.map(datum, generateSchema);
   }
@@ -30,7 +32,7 @@ function generate(data) {
   var result = _.map(data, function(jsons, namespacePrefix) {
     // TODO: Combine schemas from multiple samples.
     return _.map(jsons, function(json) {
-      // TODO: Write these schemas out in the output directory. 
+      // TODO: Write these schemas out in the output directory.
       return generateSchema(json, namespacePrefix);
     });
   });
