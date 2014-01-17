@@ -1,0 +1,12 @@
+{
+  "name": "aristotle",
+  "version": "0.0.0",
+  "description": "Create avro schema from sample json responses.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R test/"
+  },
+  "repository": "",
+  "author": "Deepank Gupta, Ethan Goldblum",
+  "license": "unlicense"
+}
