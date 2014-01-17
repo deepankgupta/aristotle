@@ -6,7 +6,7 @@
     "whitelistedProperties": ["tType"]
   },
   "enums": {
-    "whitelistedProperties": ["tType"]
+    "whitelistedProperties": ["myEnum"]
   },
   "outputDirectory": "output/"
 }

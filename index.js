@@ -29,7 +29,7 @@ function getNumberAvroType(datum, key) {
 }
 
 function getStringAvroType(datum, key) {
-  var enumWhitelistedProperties = traverse.get(config, ['enum', 'whitelistedProperties']);
+  var enumWhitelistedProperties = traverse.get(config, ['enums', 'whitelistedProperties']);
   if (enumWhitelistedProperties && _.contains(enumWhitelistedProperties, key)) {
     return 'enum';
   } else {
@@ -38,7 +38,7 @@ function getStringAvroType(datum, key) {
 }
 
 function generateSchema(datum, key) {
-  console.log(datum, key);
+  console.log('generateSchema: ', datum, key);
   var type = typeof datum;
   if (isPrimitive(type)) {
     var avroType = JAVASCRIPT_TO_AVRO_TYPE[type]
@@ -61,11 +61,11 @@ function generate(data) {
   var result = _.map(data, function(jsons, namespacePrefix) {
     // TODO: Combine schemas from multiple samples.
     return _.map(jsons, function(json) {
-      // TODO: Write these schemas out in the output directory.
+      // TODO: Write these schemas out in the output directory. 
       return generateSchema(json, namespacePrefix);
     });
   });
-  console.log('Data: ', JSON.stringify(result));
+  console.log('Data: ', JSON.stringify(result, undefined, 2));
 }
 
 function main() {
@@ -76,7 +76,6 @@ function main() {
       ' Please supply valid filename from config/ folder using --config option.');
     return -1;
   }
-  console.log(JSON.stringify(config));
   if (_.some(['fetcher', 'outputDirectory'], function(key) { return !_.has(config, key);})) {
     console.log('Some fields are absent from the config.');
     return -1;
