@@ -10,7 +10,8 @@
     "optimist": "0.6.0",
     "lodash": "2.4.1",
     "aristotle-fetcher": "git+ssh://git@gitli.corp.linkedin.com:moblight/aristotle-fetcher.git#2d28efe",
-    "q": "~1.0.0"
+    "q": "~1.0.0",
+    "traverse": "0.6.6"
   },
   "repository": "",
   "author": "Deepank Gupta, Ethan Goldblum",

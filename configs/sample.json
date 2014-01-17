@@ -1,8 +1,11 @@
 {
   "namespacePrefix": "com.linkedin.mobileserver",
-  "fetcher": "aristotle-fetcher",
+  "fetcher": "./lib/aristotle-sample-fetcher",
   "standaloneRecords": {
     "whitelistedObjects": ["metricsInfo"],
+    "whitelistedProperties": ["tType"]
+  },
+  "enums": {
     "whitelistedProperties": ["tType"]
   },
   "outputDirectory": "output/"
