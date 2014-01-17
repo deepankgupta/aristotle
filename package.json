@@ -1,12 +1,21 @@
 {
   "name": "aristotle",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Create avro schema from sample json responses.",
   "main": "index.js",
   "scripts": {
     "test": "mocha -R test/"
   },
+  "dependencies": {
+    "optimist": "0.6.0",
+    "lodash": "2.4.1",
+    "aristotle-fetcher": "git+ssh://git@gitli.corp.linkedin.com:moblight/aristotle-fetcher.git#2d28efe"
+  },
   "repository": "",
   "author": "Deepank Gupta, Ethan Goldblum",
-  "license": "unlicense"
+  "license": "unlicense",
+  "preferGlobal": "true",
+  "bin": {
+    "aristotle" : "index.js"
+  }
 }

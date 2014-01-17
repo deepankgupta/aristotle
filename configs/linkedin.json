@@ -1,0 +1,9 @@
+{
+  "namespacePrefix": "com.linkedin.mobileserver",
+  "fetcher": "aristotle-fetcher",
+  "standaloneRecords": {
+    "whitelistedObjects": ["metricsInfo"],
+    "whitelistedProperties": ["tType"]
+  },
+  "outputDirectory": "output/"
+}
