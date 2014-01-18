@@ -5,14 +5,45 @@ const util = require('util')
 const primitives = require('./lib/primitives');
 var config;
 
+function generateArraySchema(datum, key) {
+  //TODO: fix uniqing of complex types
+  var allTypes = _.uniq(_.map(datum, function (element) {
+    var s = generateSchema(element);
+    if (_.contains(['int', 'string', 'enum', 'float', 'null', 'boolean'], s.type)) {
+      return s.type;
+    } else {
+      return s;
+    }
+  }));
+
+  if (allTypes.length === 1) {
+    allTypes = _.first(allTypes);
+  }
+
+  return {
+    name: key,
+    type: {
+      type: 'array',
+      items: allTypes
+    }
+  };
+}
+
+function getAvroType(jsType, datum, key) {
+  console.log(arguments);
+  var avroType = primitives.JAVASCRIPT_TO_AVRO_TYPE[jsType];
+  if (_.isFunction(avroType)) {
+    avroType = avroType(datum, key);
+  }
+  console.log(avroType);
+  return avroType;
+}
+
 function generateSchema(datum, key) {
   console.log('generateSchema: ', datum, key);
   var type = typeof datum;
   if (primitives.isPrimitive(type)) {
-    var avroType = primitives.JAVASCRIPT_TO_AVRO_TYPE[type]
-    if (_.isFunction(avroType)) {
-      avroType = avroType(datum, key);
-    }
+    var avroType = getAvroType(type, datum, key);
     return {
       name: key,
       type: avroType,
