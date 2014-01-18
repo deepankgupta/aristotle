@@ -6,29 +6,34 @@ const primitives = require('./lib/primitives');
 var config;
 
 function getAllTypes(datum) {
-  //TODO: fix uniqing of complex types
-  var allTypes = _.uniq(_.map(datum, function (element) {
-    var s = generateSchema(element);
-    if (_.contains(['int', 'string', 'enum', 'float', 'null', 'boolean'], s.type)) {
+  var allTypes = _.uniq(_.map(datum, function (element, key) {
+    var s = generateSchema(element, key);
+    if (isPrimitiveAvro(s.type)) {
       return s.type;
     } else {
       return s;
     }
-  }));
+  }), false, uniqTransformer);
 
   return allTypes;
+}
+
+function isPrimitiveAvro(avroType) {
+  return _.contains(['int', 'string', 'enum', 'float', 'null', 'boolean'], avroType);
+}
+
+function uniqTransformer(el) {
+  delete el.name;
+  return JSON.stringify(el);
 }
 
 function getAllSchemas(datum) {
   return _.map(datum, generateSchema);
 }
 
-function isMap(datum) {
-  return getAllTypes(datum).length === 1;
-}
-
 function generateObjectSchema(datum, key) {
   var allTypes = getAllTypes(datum);
+  console.log('doing object, datum: ', datum, 'key: ', key,  'data types:',  allTypes);
   if (allTypes.length === 1) {
     //map
     return {
@@ -65,12 +70,10 @@ function generateArraySchema(datum, key) {
 }
 
 function getAvroType(jsType, datum, key) {
-  console.log(arguments);
   var avroType = primitives.JAVASCRIPT_TO_AVRO_TYPE[jsType];
   if (_.isFunction(avroType)) {
     avroType = avroType(datum, key);
   }
-  console.log(avroType);
   return avroType;
 }
 
