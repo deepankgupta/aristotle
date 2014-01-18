@@ -5,7 +5,7 @@ const util = require('util')
 const primitives = require('./lib/primitives');
 var config;
 
-function generateArraySchema(datum, key) {
+function getAllTypes(datum) {
   //TODO: fix uniqing of complex types
   var allTypes = _.uniq(_.map(datum, function (element) {
     var s = generateSchema(element);
@@ -15,6 +15,41 @@ function generateArraySchema(datum, key) {
       return s;
     }
   }));
+
+  return allTypes;
+}
+
+function getAllSchemas(datum) {
+  return _.map(datum, generateSchema);
+}
+
+function isMap(datum) {
+  return getAllTypes(datum).length === 1;
+}
+
+function generateObjectSchema(datum, key) {
+  var allTypes = getAllTypes(datum);
+  if (allTypes.length === 1) {
+    //map
+    return {
+      name: key,
+      type: {
+        type: 'map',
+        items: _.first(allTypes)
+      }
+    };
+  } else {
+    //record
+    return {
+      name: key,
+      type: 'record',
+      fields: getAllSchemas(datum)
+    };
+  }
+}
+
+function generateArraySchema(datum, key) {
+  var allTypes = getAllTypes(datum);
 
   if (allTypes.length === 1) {
     allTypes = _.first(allTypes);
@@ -51,10 +86,13 @@ function generateSchema(datum, key) {
     };
   } else {
     if (Array.isArray(datum)) {
+      console.log('doing array');
       return generateArraySchema(datum, key);
+    } else  {
+      //map or record
+      console.log('doing object');
+      return generateObjectSchema(datum, key);
     }
-    // TODO: Handle complex types
-    return _.map(datum, generateSchema);
   }
 }
 
